@@ -1,0 +1,50 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import products from '../data/products.json';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>TiendaPlus - Regalería, Tecnología y Bazar</title>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <Header />
+  
+  <main>
+    <section class="bg-blue-600 text-white py-8">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-2">¡Envíos gratis en compras mayores a $50.000!</h2>
+        <p class="text-lg">Válido hasta el 30 de Noviembre</p>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 py-12">
+      <h2 class="text-2xl font-bold mb-8 text-center">Categorías destacadas</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="#" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h3 class="text-xl font-semibold mb-2">Regalería</h3>
+          <p class="text-gray-600">Productos únicos para ocasiones especiales</p>
+        </a>
+        <!-- Repetir para otras categorías -->
+      </div>
+    </section>
+
+    <ProductGrid products={products} />
+  </main>
+
+  <Footer />
+</body>
+</html>
