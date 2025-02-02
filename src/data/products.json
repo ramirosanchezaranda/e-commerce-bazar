@@ -12,5 +12,33 @@
     "price": 29.99,
     "category": "regaleria",
     "image": "/images/tazas.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Auriculares Bluetooth Pro",
+    "price": 89.99,
+    "category": "tecnologia",
+    "image": "/images/auriculares.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Set de Jardinería Completo",
+    "price": 45.50,
+    "category": "hogar",
+    "image": "/images/jardineria.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Lámpara LED Inteligente",
+    "price": 34.99,
+    "category": "hogar",
+    "image": "/images/lampara.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Porta Retrato Digital",
+    "price": 79.99,
+    "category": "regaleria",
+    "image": "/images/portaretrato.jpg"
   }
 ]
