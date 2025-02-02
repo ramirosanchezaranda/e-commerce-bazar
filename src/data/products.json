@@ -1,44 +1,44 @@
 [
   {
     "id": 1,
-    "name": "Smartwatch X200",
+    "name": "Set de Bazar Premium",
     "price": 149.99,
-    "category": "tecnologia",
-    "image": "/images/smartwatch.jpg"
+    "category": "bazar",
+    "image": "/images/bazar1.jpeg"
   },
   {
     "id": 2,
-    "name": "Juego de Tazas Premium",
-    "price": 29.99,
-    "category": "regaleria",
-    "image": "/images/tazas.jpg"
+    "name": "Kit de Cocina Completo",
+    "price": 199.99,
+    "category": "bazar",
+    "image": "/images/bazar2.jpeg"
   },
   {
     "id": 3,
-    "name": "Auriculares Bluetooth Pro",
-    "price": 89.99,
-    "category": "tecnologia",
-    "image": "/images/auriculares.jpg"
+    "name": "Cereales Integrales Pack",
+    "price": 29.99,
+    "category": "alimentos",
+    "image": "/images/cereales1.jpeg"
   },
   {
     "id": 4,
-    "name": "Set de Jardinería Completo",
-    "price": 45.50,
-    "category": "hogar",
-    "image": "/images/jardineria.jpg"
+    "name": "Mix de Cereales Saludables",
+    "price": 34.50,
+    "category": "alimentos",
+    "image": "/images/cereales2.jpeg"
   },
   {
     "id": 5,
-    "name": "Lámpara LED Inteligente",
-    "price": 34.99,
-    "category": "hogar",
-    "image": "/images/lampara.jpg"
+    "name": "Canasta de Compras Familiar",
+    "price": 89.99,
+    "category": "alimentos",
+    "image": "/images/compras1.jpeg"
   },
   {
     "id": 6,
-    "name": "Porta Retrato Digital",
+    "name": "Pack de Ofertas Semanal",
     "price": 79.99,
-    "category": "regaleria",
-    "image": "/images/portaretrato.jpg"
+    "category": "alimentos",
+    "image": "/images/compras2.jpeg"
   }
 ]
