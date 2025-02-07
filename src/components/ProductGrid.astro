@@ -1,24 +1,32 @@
 ---
 const { products } = Astro.props;
+
+// Función para formatear el precio
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS'
+  }).format(price);
+};
 ---
 <div class="container mx-auto px-4 py-8">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {products.map(product => (
       <article class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
         <img 
-          src={product.image} 
-          alt={product.name}
+          src={product.imagen} 
+          alt={product.nombre}
           class="w-full h-48 object-cover rounded-t-lg"
         >
         <div class="p-4">
-          <h3 class="font-semibold text-lg mb-2">{product.name}</h3>
-          <p class="text-blue-600 font-bold text-xl mb-4">${product.price}</p>
+          <h3 class="font-semibold text-lg mb-2">{product.nombre}</h3>
+          <p class="text-blue-600 font-bold text-xl mb-4">{formatPrice(product.precio)}</p>
           <button 
             onclick={`window.addToCart({
               id: '${product.id}', 
-              name: '${product.name}', 
-              price: ${product.price}, 
-              image: '${product.image}', 
+              name: '${product.nombre}', 
+              price: ${product.precio},
+              image: '${product.imagen}',
               quantity: 1
             })`}
             class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
