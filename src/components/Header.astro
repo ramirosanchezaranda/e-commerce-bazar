@@ -4,7 +4,7 @@ import CartModal from './CartModal.astro';
 ---
 <header class="bg-white shadow-sm sticky top-0 z-50">
   <nav class="container mx-auto px-4 py-3 flex items-center gap-4">
-	<a href="/" class="text-2xl font-bold text-blue-600">Migue-Tienda</a>
+	<a href="/" class="text-2xl font-bold text-blue-600">Regalería</a>
 	
 	<div class="flex-1 max-w-2xl mx-4">
 	  <input 
@@ -17,9 +17,13 @@ import CartModal from './CartModal.astro';
 	<div class="flex items-center gap-4">
 	  <button 
 		data-cart-button 
-		class="p-2 hover:bg-gray-100 rounded-full"
+		class="p-2 hover:bg-gray-100 rounded-full relative"
 	  >
 		<span class="material-icons text-gray-600">shopping_cart</span>
+		<span 
+		  id="cart-counter" 
+		  class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden"
+		>0</span>
 	  </button>
 	  <button 
 		data-user-button 
@@ -33,3 +37,30 @@ import CartModal from './CartModal.astro';
 
 <AuthModal data-auth-modal />
 <CartModal />
+
+<script>
+  // Función para actualizar el contador del carrito
+  function updateCartCounter() {
+    const counter = document.getElementById('cart-counter');
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const itemCount = cart.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0);
+    
+    if (counter) {
+      counter.textContent = itemCount.toString();
+      counter.classList.toggle('hidden', itemCount === 0);
+    }
+  }
+
+  // Actualizar el contador cuando se carga la página
+  document.addEventListener('DOMContentLoaded', updateCartCounter);
+
+  // Actualizar el contador cuando cambia el carrito
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'cart') {
+      updateCartCounter();
+    }
+  });
+
+  // Evento personalizado para actualizar el contador cuando se modifica el carrito
+  window.addEventListener('cartUpdated', updateCartCounter);
+</script>

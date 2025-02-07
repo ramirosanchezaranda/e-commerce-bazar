@@ -1,13 +1,5 @@
 ---
 // src/components/CartModal.astro
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
 interface Props {
   isOpen?: boolean;
 }
@@ -54,6 +46,21 @@ const { isOpen = false } = Astro.props;
 </div>
 
 <script>
+  interface CartItem {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
+  }
+
+  // Add type declaration for window.addToCart
+  declare global {
+    interface Window {
+      addToCart: (product: CartItem) => void;
+    }
+  }
+
   class CartManager {
     private items: CartItem[] = [];
     private cartItemsContainer: HTMLElement;
@@ -94,23 +101,26 @@ const { isOpen = false } = Astro.props;
 
       this.saveCart();
       this.renderCart();
+      window.dispatchEvent(new Event('cartUpdated'));
     }
 
     removeFromCart(productId: string) {
       this.items = this.items.filter(item => item.id !== productId);
       this.saveCart();
       this.renderCart();
+      window.dispatchEvent(new Event('cartUpdated'));
     }
 
     updateQuantity(productId: string, quantity: number) {
       const item = this.items.find(item => item.id === productId);
       if (item) {
-        item.quantity = quantity;
-        if (item.quantity <= 0) {
+        if (quantity <= 0) {
           this.removeFromCart(productId);
         } else {
+          item.quantity = quantity;
           this.saveCart();
           this.renderCart();
+          window.dispatchEvent(new Event('cartUpdated'));
         }
       }
     }
