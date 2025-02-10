@@ -1,16 +1,21 @@
-export async function getProducts(search = '') {
-  const baseUrl = import.meta.env.DEV 
-    ? 'http://localhost:3000'  // URL de desarrollo
-    : 'https://tu-dominio.com'; // URL de producción cuando despliegues
+import { pool } from './database.js';
 
-  const searchParams = search ? `?search=${encodeURIComponent(search)}` : '';
-  const response = await fetch(`${baseUrl}/productos.json${searchParams}`);
-  
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.details || error.error || 'Error al obtener los productos');
+export async function getProducts(search = '') {
+  try {
+    let query = 'SELECT * FROM productos';
+    let values = [];
+
+    if (search) {
+      query += ' WHERE nombre ILIKE $1 OR descripcion ILIKE $1';
+      values = [`%${search}%`];
+    }
+
+    console.log('Ejecutando query:', query, 'con valores:', values); // Debug log
+    const { rows } = await pool.query(query, values);
+    console.log('Resultados obtenidos:', rows); // Debug log
+    return rows;
+  } catch (error) {
+    console.error('Error detallado al obtener productos:', error.message, error.stack);
+    throw error; // Lanzar el error original para ver más detalles
   }
-  
-  const { productos } = await response.json();
-  return productos;
 }
