@@ -1,9 +1,8 @@
 ---
-import Layout from '../layouts/MainLayout.astro';
+import { supabase } from '../db/supabase';
+import Layout from '../layouts/Layout.astro';
 
-// Obtener datos iniciales
-const response = await fetch('/src/data/products.json');
-const productos = await response.json();
+const { data: productos, error } = await supabase.from("productos").select('*');
 ---
 
 <Layout title="Catálogo">

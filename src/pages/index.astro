@@ -1,11 +1,17 @@
 ---
+// Import components
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ProductGrid from '../components/ProductGrid.astro';
 import { getProducts } from '../lib/getProducts';
+import { supabase } from '../db/supabase';
 
-// Obtener productos de la base de datos
-const products = await getProducts();
+
+
+// Function to fetch products
+const { data, error } = await supabase.from("productos").select('*');
+const products = data; // Define products using fetched data
+
 ---
 
 <!DOCTYPE html>
@@ -17,7 +23,8 @@ const products = await getProducts();
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Corrected TailwindCSS link -->
+  <link href="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp" rel="stylesheet">
   <title>Regalería, Tecnología y Bazar</title>
   <style>
     body { font-family: 'Inter', sans-serif; }
@@ -25,7 +32,7 @@ const products = await getProducts();
 </head>
 <body class="bg-gray-50">
   <Header />
-  
+
   <main>
     <section class="bg-blue-600 text-white py-8">
       <div class="container mx-auto px-4 text-center">
@@ -37,23 +44,25 @@ const products = await getProducts();
     <section class="container mx-auto px-4 py-12">
       <h2 class="text-2xl font-bold mb-8 text-center">Categorías destacadas</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="#" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-          <h3 class="text-xl font-semibold mb-2">Auriculares</h3>
-          <p class="text-gray-600">click aquí para mas información</p>
-        </a>
-        <a href="#" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-          <h3 class="text-xl font-semibold mb-2">Computadoras</h3>
-          <p class="text-gray-600">click aquí para mas información</p>
-        </a>
-        <a href="#" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-          <h3 class="text-xl font-semibold mb-2">Celulares</h3>
-          <p class="text-gray-600">click aquí para mas información</p>
-        </a>
-        <!-- Repetir para otras categorías -->
+        <!-- Category links -->
       </div>
     </section>
 
-    <ProductGrid products={products} />
+    {/* Render ProductGrid only if products are available */}
+    {products && <ProductGrid products={products} />}
+    
+    {/* Render error message if there's an error */}
+    {error && <div class="text-red-500">{error.message}</div>}
+    
+    {/* Render todos list if there's data */}
+    {data && (
+      <ul>
+        {data.map((entry: { name: string }) => (
+          <li>{entry.name}</li>
+        ))}
+      </ul>
+    )}
+    
   </main>
 
   <Footer />
