@@ -3,15 +3,43 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ProductGrid from '../components/ProductGrid.astro';
-import { getProducts } from '../lib/getProducts';
 import { supabase } from '../db/supabase';
 
+// Estado inicial
+let productList = [];
+let isLoading = true;
+let error = null;
+const itemsPerPage = 12;
 
+try {
+  // Fetch products with pagination
+  const { data, error: supabaseError } = await supabase
+    .from("products")
+    .select('*')
+    .range(0, itemsPerPage - 1);
 
-// Function to fetch products
-const { data, error } = await supabase.from("productos").select('*');
-const products = data; // Define products using fetched data
+  console.log('Fetched data:', data);
+  console.log('Supabase Response:', { data, supabaseError });
 
+  if (supabaseError) {
+    console.error('Supabase Error:', supabaseError);
+    console.error('Supabase Error Details:', supabaseError.details);
+    throw new Error(supabaseError.message);
+  }
+
+  productList = data || [];
+  isLoading = false;
+} catch (e) {
+  error = e instanceof Error ? e.message : 'Error al cargar los productos';
+  console.error('Error fetching products:', error);
+  isLoading = false;
+}
+
+// Pasar variables al cliente
+const initialData = {
+  itemsPerPage,
+  products: productList
+};
 ---
 
 <!DOCTYPE html>
@@ -23,48 +51,38 @@ const products = data; // Define products using fetched data
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Corrected TailwindCSS link -->
-  <link href="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp" rel="stylesheet">
-  <title>Regalería, Tecnología y Bazar</title>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-  </style>
+  <title>Bazar E-commerce</title>
 </head>
-<body class="bg-gray-50">
+<body class="min-h-screen bg-gray-50">
   <Header />
-
-  <main>
-    <section class="bg-blue-600 text-white py-8">
-      <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold mb-2">¡Envíos gratis en compras mayores a $50.000!</h2>
-        <p class="text-lg">Válido hasta el 30 de Noviembre</p>
+  
+  <main class="container mx-auto px-4 py-8">
+    {isLoading && (
+      <div class="flex justify-center items-center min-h-[400px]">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
-    </section>
-
-    <section class="container mx-auto px-4 py-12">
-      <h2 class="text-2xl font-bold mb-8 text-center">Categorías destacadas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Category links -->
-      </div>
-    </section>
-
-    {/* Render ProductGrid only if products are available */}
-    {products && <ProductGrid products={products} />}
-    
-    {/* Render error message if there's an error */}
-    {error && <div class="text-red-500">{error.message}</div>}
-    
-    {/* Render todos list if there's data */}
-    {data && (
-      <ul>
-        {data.map((entry: { name: string }) => (
-          <li>{entry.name}</li>
-        ))}
-      </ul>
     )}
     
+    {error && (
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error: </strong>
+        <span class="block sm:inline">{error}</span>
+      </div>
+    )}
+    
+    {!isLoading && !error && productList.length === 0 && (
+      <div class="text-center py-12">
+        <h2 class="text-2xl font-semibold text-gray-600">No hay productos disponibles</h2>
+        <p class="text-gray-500 mt-2">Vuelve más tarde para ver nuevos productos.</p>
+      </div>
+    )}
+    
+    {!isLoading && !error && productList.length > 0 && (
+      <ProductGrid products={productList} />
+    )}
   </main>
 
   <Footer />
+  <script src="../scripts/products.js"></script>
 </body>
 </html>

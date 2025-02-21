@@ -2,7 +2,24 @@
 import { supabase } from '../db/supabase';
 import Layout from '../layouts/Layout.astro';
 
-const { data: productos, error } = await supabase.from("productos").select('*');
+const products: Array<{ name: string; price: number; id: number }> = [];
+
+try {
+  const { data: products, error } = await supabase.from("products").select('*');
+
+  if (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+
+  if (products.length === 0) {
+    return <p>No products available.</p>;
+  }
+} catch (error) {
+  console.error('Error fetching products:', error);
+  return <p>Error fetching products</p>;
+}
+
 ---
 
 <Layout title="Catálogo">
@@ -10,11 +27,11 @@ const { data: productos, error } = await supabase.from("productos").select('*');
   
   <!-- Listar productos -->
   <div class="grid">
-    {productos.map((producto: { nombre: unknown; precio: unknown; id: unknown; }) => (
+    {products.map((product: { name: unknown; price: unknown; id: unknown; }) => (
       <div class="card">
-        <h3>{producto.nombre}</h3>
-        <p>Precio: ${producto.precio}</p>
-        <button class="delete" data-id={producto.id}>Eliminar</button>
+        <h3>{product.name}</h3>
+        <p>Precio: ${product.price}</p>
+        <button class="delete" data-id={product.id}>Eliminar</button>
       </div>
     ))}
   </div>
